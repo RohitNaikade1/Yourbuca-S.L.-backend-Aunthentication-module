@@ -14,7 +14,6 @@ mongoose.connect("mongodb+srv://eGram:@TeamIAF@cluster0.jtyap.mongodb.net/Authen
 
 // const parseUrl = express.urlencoded({ extended: false });
 // const parseJson = express.json({ extended: false });
-
 app.use(express.json());
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))

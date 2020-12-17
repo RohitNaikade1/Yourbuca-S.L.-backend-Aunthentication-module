@@ -67,7 +67,7 @@ Router.post('/signin', (req, res) => {
                     number,
                     DOB
                 },
-                key.SECRET_KEY,
+                '@TeamIAF',
                 {
                     expiresIn: '1d'
                 }
