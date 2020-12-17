@@ -1,6 +1,8 @@
 const express = require('express');
 const Router = express.Router();
 const User = require('../models/userSchema');
+const jwt = require('jsonwebtoken');
+const key = require('../config/keys')
 
 Router.post('/signup', (req, res) => {
     const { name, email, password, number, DOB } = req.body;
@@ -21,7 +23,6 @@ Router.post('/signup', (req, res) => {
                 DOB
             });
             user.save((err, user) => {
-                console.log(err)
                 if (err) {
                     console.log('Save error', err);
                     return res.status(401).json({
@@ -53,10 +54,40 @@ Router.post('/signin', (req, res) => {
                 errors: 'Email and password do not match'
             });
         } else {
+            const name = user.name;
+            const email = user.email;
+            const password = user.hashed_password;
+            const number = user.number;
+            const DOB = user.DOB;
+            const token = jwt.sign(
+                {
+                    name,
+                    email,
+                    password,
+                    number,
+                    DOB
+                },
+                key.SECRET_KEY,
+                {
+                    expiresIn: '1d'
+                }
+            );
             return res.status(200).json({
-                message: "Logged in successfully!"
+                message: token
             });
         }
+    });
+});
+
+
+Router.post('/getCreds', (req, res) => {
+    const token = req.body.token;
+
+    const dt = jwt.decode(token, {
+        complete: true
+    })
+    return res.status(200).json({
+        credentials: dt.payload
     });
 });
 
